@@ -45,6 +45,20 @@ public class SongCRUDRepository {
     }
 
     // UPDATE
+    public void update(Song song) {
+        String sql = "UPDATE songs SET title=?, length=?, lyrics=?, author_id=?, genre_id=? WHERE id=?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, song.getTitle());
+            stmt.setInt(2, song.getLength());
+            stmt.setString(3, song.getLyrics());
+            stmt.setInt(4, song.getAuthorId());
+            stmt.setInt(5, song.getGenreId());
+            stmt.setInt(6, song.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new SDAStreamingException(e);
+        }
+    }
 
     // DELETE
     public void delete(int id) {
@@ -53,6 +67,14 @@ public class SongCRUDRepository {
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
+        }
+    }
+
+    public void save(Song song) {
+        if (song.getId() != null) {
+            update(song);
+        } else {
+            create(song);
         }
     }
 
