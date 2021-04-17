@@ -4,19 +4,39 @@ import dev.sdacademy.sdastreaming.repository.SongCRUDRepository;
 
 import java.sql.*;
 
-public class Main {
+public class Main implements AutoCloseable {
 
     private static final String HOST = "localhost";  // 127.0.0.1 | localhost
     private static final String DB = "sdastreaming";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "Dd%UB#s7x5yxDrhD";
 
-    public static void main(String[] args) throws SQLException {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + HOST + ":3306/" + DB, USER, PASSWORD)) {
-            SongCRUDRepository songRepository = new SongCRUDRepository(conn);
-            songRepository.findAll().forEach(song -> {
-                System.out.println(song.getTitle());
-            });
+    public static void main(String[] args) throws Exception {
+        try (Main main = new Main()) {
+            main.run();
         }
+    }
+
+    private final Connection connection;
+    private final SongCRUDRepository songRepository;
+
+    public Main() {
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://" + HOST + ":3306/" + DB, USER, PASSWORD);
+            songRepository = new SongCRUDRepository(connection);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void close() throws Exception {
+        connection.close();
+    }
+
+    public void run() {
+        songRepository.findAll().forEach(song -> {
+            System.out.println(song);
+        });
     }
 }

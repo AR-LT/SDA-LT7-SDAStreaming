@@ -24,9 +24,7 @@ public class SongCRUDRepository {
         try (Statement stmt = connection.createStatement()) {
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM songs");
             while (resultSet.next()) {
-                Song song = new Song();
-                song.setTitle(resultSet.getString("title"));
-                songs.add(song);
+                songs.add(toSong(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -36,4 +34,15 @@ public class SongCRUDRepository {
 
     // UPDATE
     // DELETE
+
+    private Song toSong(ResultSet rs) throws SQLException {
+        Song song = new Song();
+        song.setId(rs.getInt("id"));
+        song.setTitle(rs.getString("title"));
+        song.setLength(rs.getInt("length"));
+        song.setLyrics(rs.getString("lyrics"));
+        song.setAuthorId(rs.getInt("author_id"));
+        song.setGenreId(rs.getInt("genre_id"));
+        return song;
+    }
 }

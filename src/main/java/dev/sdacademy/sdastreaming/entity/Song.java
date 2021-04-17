@@ -56,4 +56,16 @@ public class Song {
     public void setGenreId(Integer genreId) {
         this.genreId = genreId;
     }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", length=" + length +
+                ", lyrics='" + lyrics + '\'' +
+                ", authorId=" + authorId +
+                ", genreId=" + genreId +
+                '}';
+    }
 }
