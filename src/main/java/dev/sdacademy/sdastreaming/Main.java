@@ -36,12 +36,15 @@ public class Main implements AutoCloseable {
     }
 
     public void run() {
-        Song newSong = new Song();
-        newSong.setTitle("test \"new\" song");
-        newSong.setLength(100);
-        newSong.setAuthorId(1);
-        newSong.setGenreId(2);
-        songRepository.create(newSong);
+//        Song newSong = new Song();
+//        newSong.setTitle("test \"new\" song");
+//        newSong.setLength(100);
+//        newSong.setAuthorId(1);
+//        newSong.setGenreId(2);
+//        songRepository.create(newSong);
+
+//        songRepository.delete(18);
+
         songRepository.findAll().forEach(song -> {
             System.out.println(song);
         });

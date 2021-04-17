@@ -45,7 +45,16 @@ public class SongCRUDRepository {
     }
 
     // UPDATE
+
     // DELETE
+    public void delete(int id) {
+        try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM songs WHERE id = ?")) {
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new SDAStreamingException(e);
+        }
+    }
 
     private Song toSong(ResultSet rs) throws SQLException {
         Song song = new Song();
