@@ -1,7 +1,7 @@
 package dev.sdacademy.sdastreaming.repository;
 
 import dev.sdacademy.sdastreaming.entity.Song;
-import dev.sdacademy.sdastreaming.exception.SDASteamingException;
+import dev.sdacademy.sdastreaming.exception.SDAStreamingException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class SongCRUDRepository {
             stmt.setInt(5, song.getGenreId());
             stmt.execute();
         } catch (SQLException e) {
-            throw new SDASteamingException(e);
+            throw new SDAStreamingException(e);
         }
     }
 
@@ -39,7 +39,7 @@ public class SongCRUDRepository {
                 songs.add(toSong(resultSet));
             }
         } catch (SQLException e) {
-            throw new SDASteamingException(e);
+            throw new SDAStreamingException(e);
         }
         return songs;
     }
