@@ -1,5 +1,6 @@
 package dev.sdacademy.sdastreaming;
 
+import dev.sdacademy.sdastreaming.entity.Song;
 import dev.sdacademy.sdastreaming.repository.SongCRUDRepository;
 
 import java.sql.*;
@@ -35,6 +36,12 @@ public class Main implements AutoCloseable {
     }
 
     public void run() {
+        Song newSong = new Song();
+        newSong.setTitle("test \"new\" song");
+        newSong.setLength(100);
+        newSong.setAuthorId(1);
+        newSong.setGenreId(2);
+        songRepository.create(newSong);
         songRepository.findAll().forEach(song -> {
             System.out.println(song);
         });
