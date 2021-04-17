@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthorCRUDRepository {
+public class AuthorCRUDRepository implements CRUDRepository<Author> {
 
     private final Connection connection;
 
@@ -15,7 +15,7 @@ public class AuthorCRUDRepository {
         this.connection = connection;
     }
 
-    // CREATE
+    @Override
     public void create(Author author) {
         String sql = "INSERT INTO authors (name, created) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -27,7 +27,7 @@ public class AuthorCRUDRepository {
         }
     }
 
-    // READ
+    @Override
     public List<Author> findAll() {
         List<Author> authors = new ArrayList<>();
         try (Statement stmt = connection.createStatement()) {
@@ -41,8 +41,7 @@ public class AuthorCRUDRepository {
         return authors;
     }
 
-    // UPDATE
-
+    @Override
     public void update(Author author) {
         String sql = "UPDATE authors SET name=?, created=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -55,21 +54,13 @@ public class AuthorCRUDRepository {
         }
     }
 
-    // DELETE
+    @Override
     public void delete(int id) {
         try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM authors WHERE id = ?")) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
-        }
-    }
-
-    public void save(Author author) {
-        if (author.getId() != null) {
-            update(author);
-        } else {
-            create(author);
         }
     }
 

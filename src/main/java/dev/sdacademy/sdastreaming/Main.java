@@ -3,9 +3,13 @@ package dev.sdacademy.sdastreaming;
 import dev.sdacademy.sdastreaming.entity.Author;
 import dev.sdacademy.sdastreaming.entity.Song;
 import dev.sdacademy.sdastreaming.repository.AuthorCRUDRepository;
+import dev.sdacademy.sdastreaming.repository.CRUDRepository;
 import dev.sdacademy.sdastreaming.repository.SongCRUDRepository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Main implements AutoCloseable {
@@ -22,8 +26,8 @@ public class Main implements AutoCloseable {
     }
 
     private final Connection connection;
-    private final SongCRUDRepository songRepository;
-    private final AuthorCRUDRepository authorRepository;
+    private final CRUDRepository<Song> songRepository;
+    private final CRUDRepository<Author> authorRepository;
 
     public Main() {
         try {

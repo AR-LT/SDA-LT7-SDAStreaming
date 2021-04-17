@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongCRUDRepository {
+public class SongCRUDRepository implements CRUDRepository<Song> {
 
     private final Connection connection;
 
@@ -15,7 +15,7 @@ public class SongCRUDRepository {
         this.connection = connection;
     }
 
-    // CREATE
+    @Override
     public void create(Song song) {
         String sql = "INSERT INTO songs (title, length, lyrics, author_id, genre_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -30,7 +30,7 @@ public class SongCRUDRepository {
         }
     }
 
-    // READ
+    @Override
     public List<Song> findAll() {
         List<Song> songs = new ArrayList<>();
         try (Statement stmt = connection.createStatement()) {
@@ -44,7 +44,7 @@ public class SongCRUDRepository {
         return songs;
     }
 
-    // UPDATE
+    @Override
     public void update(Song song) {
         String sql = "UPDATE songs SET title=?, length=?, lyrics=?, author_id=?, genre_id=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -60,21 +60,13 @@ public class SongCRUDRepository {
         }
     }
 
-    // DELETE
+    @Override
     public void delete(int id) {
         try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM songs WHERE id = ?")) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
-        }
-    }
-
-    public void save(Song song) {
-        if (song.getId() != null) {
-            update(song);
-        } else {
-            create(song);
         }
     }
 

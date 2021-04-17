@@ -2,12 +2,13 @@ package dev.sdacademy.sdastreaming.entity;
 
 import java.sql.Date;
 
-public class Author {
+public class Author implements Entity {
 
     private Integer Id;
     private String name;
     private Date created;
 
+    @Override
     public Integer getId() {
         return Id;
     }
