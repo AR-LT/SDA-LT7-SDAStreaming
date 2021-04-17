@@ -3,11 +3,15 @@ package dev.sdacademy.sdastreaming.repository;
 import dev.sdacademy.sdastreaming.entity.Song;
 import dev.sdacademy.sdastreaming.exception.SDAStreamingException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongCRUDRepository implements CRUDRepository<Song> {
+public class SongCRUDRepository {
 
     private final Connection connection;
 
@@ -15,7 +19,7 @@ public class SongCRUDRepository implements CRUDRepository<Song> {
         this.connection = connection;
     }
 
-    @Override
+    // CREATE
     public void create(Song song) {
         String sql = "INSERT INTO songs (title, length, lyrics, author_id, genre_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -30,7 +34,7 @@ public class SongCRUDRepository implements CRUDRepository<Song> {
         }
     }
 
-    @Override
+    // READ
     public List<Song> findAll() {
         List<Song> songs = new ArrayList<>();
         try (Statement stmt = connection.createStatement()) {
@@ -44,7 +48,7 @@ public class SongCRUDRepository implements CRUDRepository<Song> {
         return songs;
     }
 
-    @Override
+    // UPDATE
     public void update(Song song) {
         String sql = "UPDATE songs SET title=?, length=?, lyrics=?, author_id=?, genre_id=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -60,13 +64,21 @@ public class SongCRUDRepository implements CRUDRepository<Song> {
         }
     }
 
-    @Override
+    // DELETE
     public void delete(int id) {
         try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM songs WHERE id = ?")) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
+        }
+    }
+
+    public void save(Song song) {
+        if (song.getId() != null) {
+            update(song);
+        } else {
+            create(song);
         }
     }
 

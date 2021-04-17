@@ -3,31 +3,35 @@ package dev.sdacademy.sdastreaming.repository;
 import dev.sdacademy.sdastreaming.entity.Author;
 import dev.sdacademy.sdastreaming.exception.SDAStreamingException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthorCRUDRepository implements CRUDRepository<Author> {
+public class AuthorCRUDrepository {
 
     private final Connection connection;
 
-    public AuthorCRUDRepository(Connection connection) {
+    public AuthorCRUDrepository(Connection connection) {
         this.connection = connection;
     }
 
-    @Override
-    public void create(Author author) {
+    // CREATE
+    public void create(Author song) {
         String sql = "INSERT INTO authors (name, created) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, author.getName());
-            stmt.setDate(2, author.getCreated());
+            stmt.setString(1, song.getName());
+            stmt.setDate(2, song.getCreated());
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
         }
     }
 
-    @Override
+    // READ
     public List<Author> findAll() {
         List<Author> authors = new ArrayList<>();
         try (Statement stmt = connection.createStatement()) {
@@ -41,7 +45,7 @@ public class AuthorCRUDRepository implements CRUDRepository<Author> {
         return authors;
     }
 
-    @Override
+    // UPDATE
     public void update(Author author) {
         String sql = "UPDATE authors SET name=?, created=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -54,13 +58,21 @@ public class AuthorCRUDRepository implements CRUDRepository<Author> {
         }
     }
 
-    @Override
+    // DELETE
     public void delete(int id) {
         try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM authors WHERE id = ?")) {
             stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {
             throw new SDAStreamingException(e);
+        }
+    }
+
+    public void save(Author author) {
+        if (author.getId() != null) {
+            update(author);
+        } else {
+            create(author);
         }
     }
 
@@ -71,4 +83,5 @@ public class AuthorCRUDRepository implements CRUDRepository<Author> {
         author.setCreated(rs.getDate("created"));
         return author;
     }
+
 }

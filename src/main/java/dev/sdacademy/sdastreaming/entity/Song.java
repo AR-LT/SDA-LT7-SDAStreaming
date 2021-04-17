@@ -1,6 +1,6 @@
 package dev.sdacademy.sdastreaming.entity;
 
-public class Song implements Entity {
+public class Song {
 
     private Integer id;
     private String title;
@@ -9,7 +9,6 @@ public class Song implements Entity {
     private Integer authorId;
     private Integer genreId;
 
-    @Override
     public Integer getId() {
         return id;
     }
